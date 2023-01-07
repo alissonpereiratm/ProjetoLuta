@@ -73,7 +73,6 @@ public class LutadorDAO {
 				lutador.setVitorias(dadosBD.getInt("vitoria"));
 				lutador.setDerrotas(dadosBD.getInt("derrota"));
 				lutador.setEmpates(dadosBD.getInt("empate"));
-
 				lutadores.add(lutador);
 			}
 		} catch (Exception e) {

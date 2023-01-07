@@ -17,8 +17,8 @@ public class Principal {
 		int op = 0;
 		do {
 			op = Integer.parseInt(JOptionPane.showInputDialog(
-					"MENU\n1-Cadastrar\n2-Pesquisar Lutador\n3-Mostrar lutadores\n4-Alterar peso\n5-Excluir lutador\n6-Marcar Luta"
-					+ "\n7-Finaliza Sistema"));
+					"MENU\n1-Cadastrar\n2-Pesquisar Lutador\n3-Mostrar lutadores\n4-Alterar peso\n5-Excluir lutador\n6-Marcar Luta\n7-Mostrar lutas marcadas"
+							+ "\n8-Finaliza Sistema"));
 			switch (op) {
 			case 1:
 				try {
@@ -34,13 +34,7 @@ public class Principal {
 				pesquisarLutador();
 				break;
 			case 3:
-				ArrayList<Lutador> lutadores = new ArrayList<>();
-				try {
-					lutadores = LutadorDAO.lerDadosBD();
-				} catch (SQLException e) {
-					System.out.println("ERRO AO CARREGAR DADOS DO BANCO");
-				}
-				mostrarDados(lutadores);
+				mostraListaLutadores();
 				break;
 			case 4:
 				alterarPesoLutador();
@@ -50,8 +44,36 @@ public class Principal {
 				break;
 			case 6:
 				LutaDAO.marcarLutaBD(Luta.marcarLuta());
+				break;
+			case 7:
+				mostralutasMarcadas();
 			}
-		} while (op != 7);
+		} while (op != 8);
+	}
+
+	private static void mostralutasMarcadas() {
+		ArrayList<Luta> lutas = new ArrayList<>();
+		try {
+			lutas = LutaDAO.lerDadosBD();
+		} catch (SQLException e) {
+			System.out.println("ERRO AO CARREGAR DADOS DO BANCO");
+		}
+		String mostrarLutas = "";
+		for (Luta luta : lutas) {
+			mostrarLutas +="ID da Luta "+luta.getId()+"\n"+ luta.getLutador1() + " VS " + luta.getLutador2() + "\n" + luta.getRound() + " Rounds"
+					+ "\n\n";
+		}
+		JOptionPane.showMessageDialog(null, mostrarLutas);
+	}
+
+	public static void mostraListaLutadores() {
+		ArrayList<Lutador> lutadores = new ArrayList<>();
+		try {
+			lutadores = LutadorDAO.lerDadosBD();
+		} catch (SQLException e) {
+			System.out.println("ERRO AO CARREGAR DADOS DO BANCO");
+		}
+		mostrarDados(lutadores);
 	}
 
 	private static void excluirLutador() {
@@ -142,8 +164,8 @@ public class Principal {
 
 	private static void pesquisarLutador() throws SQLException {
 		String nome = JOptionPane.showInputDialog("Digite o nome");
-		Lutador teste = LutadorDAO.pesquisarLutadorBD(nome);
-		JOptionPane.showMessageDialog(null, teste.toString());
+		Lutador pesquisaLutador = LutadorDAO.pesquisarLutadorBD(nome);
+		JOptionPane.showMessageDialog(null, pesquisaLutador.toString());
 	}
 
 	private static Lutador cadastrar() throws SQLException {
