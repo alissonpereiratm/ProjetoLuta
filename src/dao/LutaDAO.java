@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import modelo.Luta;
+import modelo.Lutador;
 
 public class LutaDAO {
 
@@ -38,11 +39,9 @@ public class LutaDAO {
 			if (con != null)
 				con.close();
 		}
-		
-		
 
 	}
-	
+
 	public static ArrayList<Luta> lerDadosBD() throws SQLException {
 		String sql = "SELECT * from luta";
 
@@ -59,13 +58,12 @@ public class LutaDAO {
 
 			while (dadosBD.next()) {
 				Luta luta = new Luta();
-				
+
 				luta.setRound(dadosBD.getInt("rounds"));
 				luta.setId(dadosBD.getInt("idluta"));
 				luta.setLutador1(dadosBD.getString("lutador1"));
 				luta.setLutador2(dadosBD.getString("lutador2"));
-		
-			
+
 				lutas.add(luta);
 			}
 		} catch (Exception e) {
@@ -78,6 +76,42 @@ public class LutaDAO {
 				con.close();
 		}
 		return lutas;
+	}
+
+	public static Luta pesquisarLutaBD(int id) throws SQLException {
+		String sql = "SELECT * FROM luta WHERE idluta = ? ";
+
+		Luta luta = null;
+		Connection con = null;
+		PreparedStatement codigo = null;
+		ResultSet dadosBD = null;
+
+		try {
+			con = Conexao.conectarBD();
+			codigo = con.prepareStatement(sql);
+			codigo.setInt(1, id);
+			dadosBD = codigo.executeQuery();
+
+			if (dadosBD.next() != false) {
+				 luta = new Luta();
+
+				luta.setRound(dadosBD.getInt("rounds"));
+				luta.setId(dadosBD.getInt("idluta"));
+				luta.setLutador1(dadosBD.getString("lutador1"));
+				luta.setLutador2(dadosBD.getString("lutador2"));
+
+			}
+
+		} catch (Exception e) {
+			System.out.println("ERRO.....");
+		} finally {
+			if (codigo != null) {
+				codigo.close();
+			}
+			if (con != null)
+				con.close();
+		}
+		return luta;
 	}
 
 }

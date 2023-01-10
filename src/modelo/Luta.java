@@ -7,6 +7,7 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 import aplicacao.Principal;
+import dao.LutaDAO;
 import dao.LutadorDAO;
 
 public class Luta {
@@ -45,6 +46,11 @@ public class Luta {
 	 * } } } else JOptionPane.showMessageDialog(null,
 	 * "Não há lutadores o suficiente para marcar uma luta"); return null; }
 	 */
+
+	@Override
+	public String toString() {
+		return "A Luta entre "+  lutador1 + " e " + lutador2 + " foi iniciada e terá "+round+" rounds ";
+	}
 
 	public static Luta marcarLuta() {
 		int op = 0;
@@ -88,6 +94,11 @@ public class Luta {
 		this.lutador1 = lutador1;
 		this.lutador2 = lutador2;
 	}
+	
+	
+	//metodo para iniciar a luta com conexão ao BD
+	
+
 
 	public void iniciarLuta(ArrayList<Lutador> lutadores) {
 		Random gerador = new Random(2);

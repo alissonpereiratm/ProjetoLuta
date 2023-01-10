@@ -18,7 +18,7 @@ public class Principal {
 		do {
 			op = Integer.parseInt(JOptionPane.showInputDialog(
 					"MENU\n1-Cadastrar\n2-Pesquisar Lutador\n3-Mostrar lutadores\n4-Alterar peso\n5-Excluir lutador\n6-Marcar Luta\n7-Mostrar lutas marcadas"
-							+ "\n8-Finaliza Sistema"));
+							+"\n8-Iniciar Luta "+"\n9-Finaliza Sistema"));
 			switch (op) {
 			case 1:
 				try {
@@ -47,11 +47,30 @@ public class Principal {
 				break;
 			case 7:
 				mostralutasMarcadas();
+				break;
+			case 8:
+				marcarLuta();
 			}
-		} while (op != 8);
+		} while (op != 9);
 	}
+	
+	
+	
+	
+	private static void marcarsarLuta() throws SQLException {
+		Principal.mostralutasMarcadas();
+		int id=	Integer.parseInt(JOptionPane.showInputDialog("Digite o ID da luta:"));
+		Luta pesquisaLuta = LutaDAO.pesquisarLutaBD(id);
+		JOptionPane.showMessageDialog(null, pesquisaLuta.toString());
+	}
+	
 
-	private static void mostralutasMarcadas() {
+	
+	
+	
+	
+	
+	public static void mostralutasMarcadas() {
 		ArrayList<Luta> lutas = new ArrayList<>();
 		try {
 			lutas = LutaDAO.lerDadosBD();
@@ -63,7 +82,7 @@ public class Principal {
 			mostrarLutas +="ID da Luta "+luta.getId()+"\n"+ luta.getLutador1() + " VS " + luta.getLutador2() + "\n" + luta.getRound() + " Rounds"
 					+ "\n\n";
 		}
-		JOptionPane.showMessageDialog(null, mostrarLutas);
+		JOptionPane.showMessageDialog(null,"Lutas marcadas\n\n"+ mostrarLutas);
 	}
 
 	public static void mostraListaLutadores() {
@@ -168,6 +187,17 @@ public class Principal {
 		JOptionPane.showMessageDialog(null, pesquisaLutador.toString());
 	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	private static Lutador cadastrar() throws SQLException {
 
 		String nome = "";
