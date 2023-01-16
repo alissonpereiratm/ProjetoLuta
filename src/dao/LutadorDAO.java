@@ -35,7 +35,7 @@ public class LutadorDAO {
 			codigo.execute();
 
 		} catch (SQLException s) {
-			System.out.println("ERRO....");
+			System.out.println("ERRO INSERT....");
 			s.printStackTrace();
 		} finally {
 			if (codigo != null) {
@@ -76,7 +76,7 @@ public class LutadorDAO {
 				lutadores.add(lutador);
 			}
 		} catch (Exception e) {
-			System.out.println("ERRO.....");
+			System.out.println("ERRO SELECT.....");
 		} finally {
 			if (codigo != null) {
 				codigo.close();
@@ -116,7 +116,7 @@ public class LutadorDAO {
 			}
 
 		} catch (Exception e) {
-			System.out.println("ERRO.....");
+			System.out.println("ERRO SELECT.....");
 		} finally {
 			if (codigo != null) {
 				codigo.close();

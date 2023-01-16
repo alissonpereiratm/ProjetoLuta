@@ -27,9 +27,7 @@ public class Principal {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-
 				break;
-
 			case 2:
 
 				pesquisarLutador();
@@ -51,6 +49,9 @@ public class Principal {
 				break;
 			case 8:
 				iniciarLuta();
+				break;
+			case 9:
+				JOptionPane.showMessageDialog(null, "Sistema Finalizado!");
 			}
 		} while (op != 9);
 	}
@@ -98,7 +99,6 @@ public class Principal {
 
 					LutadorDAO.vitoriaLutador(lutador);
 
-					JOptionPane.showMessageDialog(null, "Dados atualizados");
 					JOptionPane.showMessageDialog(null, "O lutador " + lutador.getNome() + " venceu a luta");
 
 				}
@@ -118,7 +118,6 @@ public class Principal {
 
 					LutadorDAO.vitoriaLutador(lutador);
 
-					JOptionPane.showMessageDialog(null, "Dados atualizados");
 					JOptionPane.showMessageDialog(null, "O lutador " + lutador.getNome() + " venceu a luta");
 
 				}
@@ -143,13 +142,14 @@ public class Principal {
 					lutador.setEmpates(1);
 
 					LutadorDAO.empateLutador(lutador);
+					
+					JOptionPane.showMessageDialog(null, "Luta empatada");
 
-					JOptionPane.showMessageDialog(null, "Dados atualizados");
 				}
 
-				JOptionPane.showMessageDialog(null, "Luta empatada");
+				JOptionPane.showMessageDialog(null, "Dados atualizados");
 			}
-			
+
 			LutaDAO.deletarLutaBD(pesquisaLuta);
 		} else
 			JOptionPane.showMessageDialog(null, "Vc precisa marcar uma luta antes");
