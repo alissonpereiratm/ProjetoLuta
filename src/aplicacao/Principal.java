@@ -20,39 +20,82 @@ public class Principal {
 			op = Integer.parseInt(JOptionPane.showInputDialog(
 					"MENU\n1-Cadastrar\n2-Pesquisar Lutador\n3-Mostrar lutadores\n4-Alterar peso\n5-Excluir lutador\n6-Marcar Luta\n7-Mostrar lutas marcadas"
 							+ "\n8-Iniciar Luta " + "\n9-Finaliza Sistema"));
-			switch (op) {
-			case 1:
-				try {
+			try {
+				switch (op) {
+
+				case 1:
+
 					LutadorDAO.salvarDadosBD(cadastrar());
-				} catch (SQLException e) {
-					e.printStackTrace();
+
+					break;
+				case 2:
+					pesquisarLutador();
+					break;
+				case 3:
+					mostraListaLutadores();
+					break;
+				case 4:
+					alterarPesoLutador();
+					break;
+				case 5:
+					excluirLutador();
+					break;
+				case 6:
+					LutaDAO.marcarLutaBD(marcarLuta());
+					break;
+				case 7:
+					mostralutasMarcadas();
+					break;
+				case 8:
+					iniciarLuta();
+					break;
+				case 9:
+					JOptionPane.showMessageDialog(null, "Sistema Finalizado!");
 				}
-				break;
-			case 2:
-				pesquisarLutador();
-				break;
-			case 3:
-				mostraListaLutadores();
-				break;
-			case 4:
-				alterarPesoLutador();
-				break;
-			case 5:
-				excluirLutador();
-				break;
-			case 6:
-				LutaDAO.marcarLutaBD(Luta.marcarLuta());
-				break;
-			case 7:
-				mostralutasMarcadas();
-				break;
-			case 8:
-				iniciarLuta();
-				break;
-			case 9:
-				JOptionPane.showMessageDialog(null, "Sistema Finalizado!");
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		} while (op != 9);
+	}
+
+	private static Luta marcarLuta() {
+		int op = 0;
+		Luta luta = null;
+
+		try {
+			do {
+				Principal.mostraListaLutadores();
+				String nome = JOptionPane.showInputDialog("Digite o nome do primeiro lutador ");
+
+				Lutador lutador1 = LutadorDAO.pesquisarLutadorBD(nome);
+				if (lutador1 != null) {
+					Principal.mostraListaLutadores();
+					String nome2 = JOptionPane.showInputDialog("Digite o nome do segundo lutador");
+
+					Lutador lutador2 = LutadorDAO.pesquisarLutadorBD(nome2);
+					if (lutador2 != null) {
+						if (lutador1.getCategoria().equalsIgnoreCase(lutador2.getCategoria())) {
+							int round = Integer.parseInt(JOptionPane.showInputDialog("Digite a quantidade de rounds"));
+
+							JOptionPane.showMessageDialog(null, "Luta marcada!");
+							luta = new Luta(round, nome, nome2);
+							op = 1;
+						} else
+							JOptionPane.showMessageDialog(null,
+									"Categoria dos lutadores diferentes\nDigite novamente o nome dos 2 lutadores");
+					} else
+						JOptionPane.showMessageDialog(null,
+								"Lutador não cadastrado\nDigite novamente o nome dos 2 lutadores");
+				} else
+					JOptionPane.showMessageDialog(null,
+							"Lutador não cadastrado\nDigite novamente o nome dos 2 lutadores");
+			} while (op == 0);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return luta;
+
 	}
 
 	private static void iniciarLuta() throws SQLException {
@@ -141,7 +184,7 @@ public class Principal {
 					lutador.setEmpates(1);
 
 					LutadorDAO.empateLutador(lutador);
-					
+
 					JOptionPane.showMessageDialog(null, "Luta empatada");
 
 				}
@@ -197,34 +240,6 @@ public class Principal {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public static Luta marcarLuta() {
-		Luta luta = null;
-		String nome = JOptionPane.showInputDialog("Digite o nome do lutador 1");
-		try {
-			Lutador lutador1 = LutadorDAO.pesquisarLutadorBD(nome);
-			if (lutador1 != null) {
-				mostrarDados(lutador1);
-				String nome2 = JOptionPane.showInputDialog("Digite o nome do lutador 2");
-
-				Lutador lutador2 = LutadorDAO.pesquisarLutadorBD(nome2);
-				if (lutador2 != null) {
-					mostrarDados(lutador2);
-					int round = Integer.parseInt(JOptionPane.showInputDialog("Digite a quantidade de rounds"));
-
-					JOptionPane.showMessageDialog(null, "Luta marcada!");
-					luta = new Luta(round, nome, nome2);
-
-				} else
-					JOptionPane.showMessageDialog(null, "Lutador não cadastrado");
-			} else
-				JOptionPane.showMessageDialog(null, "Lutador não cadastrado");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return luta;
-
 	}
 
 	private static void alterarPesoLutador() {

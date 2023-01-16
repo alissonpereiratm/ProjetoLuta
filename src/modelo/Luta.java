@@ -1,15 +1,5 @@
 package modelo;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Random;
-
-import javax.swing.JOptionPane;
-
-import aplicacao.Principal;
-import dao.LutaDAO;
-import dao.LutadorDAO;
-
 public class Luta {
 	private int id;
 	private int round;
@@ -49,126 +39,13 @@ public class Luta {
 
 	@Override
 	public String toString() {
-		return "A Luta entre "+  lutador1 + " e " + lutador2 + " foi iniciada e terá "+round+" rounds ";
-	}
-
-	public static Luta marcarLuta() {
-		int op = 0;
-		Luta luta = null;
-
-		try {
-			do {
-				Principal.mostraListaLutadores();
-				String nome = JOptionPane.showInputDialog("Digite o nome do lutador 1");
-
-				Lutador lutador1 = LutadorDAO.pesquisarLutadorBD(nome);
-				if (lutador1 != null) {
-					Principal.mostraListaLutadores();
-					String nome2 = JOptionPane.showInputDialog("Digite o nome do lutador 2");
-
-					Lutador lutador2 = LutadorDAO.pesquisarLutadorBD(nome2);
-					if (lutador2 != null) {
-						if (lutador1.getCategoria().equalsIgnoreCase(lutador2.getCategoria())) {
-							int round = Integer.parseInt(JOptionPane.showInputDialog("Digite a quantidade de rounds"));
-
-							JOptionPane.showMessageDialog(null, "Luta marcada!");
-							luta = new Luta(round, nome, nome2);
-							op = 1;
-						} else
-							JOptionPane.showMessageDialog(null, "Categoria dos lutadores diferentes\nDigite novamente o nome dos 2 lutadores");
-					} else
-						JOptionPane.showMessageDialog(null, "Lutador não cadastrado\nDigite novamente o nome dos 2 lutadores");
-				} else
-					JOptionPane.showMessageDialog(null, "Lutador não cadastrado\nDigite novamente o nome dos 2 lutadores");
-			} while (op == 0);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-		return luta;
-
+		return "A Luta entre " + lutador1 + " e " + lutador2 + " foi iniciada e terá " + round + " rounds ";
 	}
 
 	public Luta(int round, String lutador1, String lutador2) {
 		this.round = round;
 		this.lutador1 = lutador1;
 		this.lutador2 = lutador2;
-	}
-	
-	
-	//metodo para iniciar a luta com conexão ao BD
-	
-
-
-	public void iniciarLuta(ArrayList<Lutador> lutadores) {
-		Random gerador = new Random(2);
-		int lutador01 = 0;
-		int lutador02 = 0;
-		String vitoria = "";
-		if (this.round != 0) {
-			JOptionPane.showMessageDialog(null, "A luta será " + this.lutador1 + " VS " + this.lutador2 + " e possui "
-					+ this.round + " Rounds no total");
-			for (int i = 0; i < this.round; i++) {
-				int resultado1 = gerador.nextInt(10);
-				int resultado2 = gerador.nextInt(10);
-				JOptionPane.showMessageDialog(null, "Round " + (i + 1) + "\nO Lutador " + this.lutador1 + " obtve "
-						+ resultado1 + " pontos" + "\nO Lutador " + this.lutador2 + " obtve " + resultado2 + " pontos");
-				if (resultado1 > resultado2) {
-					vitoria = this.lutador1;
-					JOptionPane.showMessageDialog(null, "O lutador " + vitoria + " ganhou o Round");
-				} else if (resultado1 < resultado2) {
-					vitoria = this.lutador2;
-					JOptionPane.showMessageDialog(null, "O lutador " + vitoria + " ganhou o Round");
-				} else
-					JOptionPane.showMessageDialog(null, "Round empatado");
-				if (this.lutador1.equalsIgnoreCase(vitoria)) {
-					lutador01++;
-				} else
-					lutador02++;
-
-			}
-			if (lutador01 > lutador02) {
-				for (Lutador lutador : lutadores) {
-					if (lutador.getNome().equalsIgnoreCase(this.lutador1)) {
-						lutador.vitoria(1);
-						JOptionPane.showMessageDialog(null, "O lutador " + this.lutador1 + " venceu a luta");
-					}
-				}
-				for (Lutador lutador2 : lutadores) {
-					if (lutador2.getNome().equalsIgnoreCase(this.lutador2)) {
-						lutador2.derrota(1);
-					}
-				}
-			} else if (lutador01 < lutador02) {
-				for (Lutador lutador : lutadores) {
-					if (lutador.getNome().equalsIgnoreCase(this.lutador2)) {
-						lutador.vitoria(1);
-						JOptionPane.showMessageDialog(null, "O lutador " + this.lutador2 + " venceu a luta");
-
-					}
-				}
-				for (Lutador lutador2 : lutadores) {
-					if (lutador2.getNome().equalsIgnoreCase(this.lutador1)) {
-						lutador2.derrota(1);
-					}
-				}
-			} else if (lutador01 == lutador02) {
-				for (Lutador lutador : lutadores) {
-					if (lutador.getNome().equalsIgnoreCase(this.lutador2)) {
-						lutador.empate(1);
-
-					}
-				}
-				for (Lutador lutador2 : lutadores) {
-					if (lutador2.getNome().equalsIgnoreCase(this.lutador1)) {
-						lutador2.empate(1);
-					}
-				}
-				JOptionPane.showMessageDialog(null, "Luta empatada");
-			}
-		} else
-			JOptionPane.showMessageDialog(null, "Vc precisa marcar uma luta antes");
-
 	}
 
 	public Luta() {
