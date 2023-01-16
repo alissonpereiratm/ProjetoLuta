@@ -12,6 +12,7 @@ import modelo.Luta;
 import modelo.Lutador;
 
 public class LutaDAO {
+	
 
 	public static void marcarLutaBD(Luta luta) throws SQLException {
 		String sql = "INSERT INTO luta (rounds,lutador1,lutador2) VALUES (?,?,?)";
@@ -30,7 +31,7 @@ public class LutaDAO {
 			codigo.execute();
 
 		} catch (SQLException s) {
-			System.out.println("ERRO....");
+			System.out.println("ERRO INSERT....");
 			s.printStackTrace();
 		} finally {
 			if (codigo != null) {
@@ -41,6 +42,33 @@ public class LutaDAO {
 		}
 
 	}
+	
+	
+	public static void deletarLutaBD(Luta luta) throws SQLException {
+
+		String sql1 = "DELETE FROM luta WHERE idLuta = ?";
+
+		Connection con = null;
+		PreparedStatement codigo = null;
+
+		try {
+			con = Conexao.conectarBD();
+			codigo = con.prepareStatement(sql1);
+			codigo.setInt(1, luta.getId());
+			codigo.execute();
+		} catch (SQLException e) {
+			System.out.println("ERRO DELETE.....");
+			e.printStackTrace();
+		} finally {
+			if (codigo != null) {
+				codigo.close();
+			}
+			if (con != null)
+				con.close();
+		}
+	}
+	
+	
 
 	public static ArrayList<Luta> lerDadosBD() throws SQLException {
 		String sql = "SELECT * from luta";
@@ -67,7 +95,7 @@ public class LutaDAO {
 				lutas.add(luta);
 			}
 		} catch (Exception e) {
-			JOptionPane.showMessageDialog(null, "ERRO.....");
+			JOptionPane.showMessageDialog(null, "ERRO SELECT.....");
 		} finally {
 			if (codigo != null) {
 				codigo.close();
@@ -103,7 +131,7 @@ public class LutaDAO {
 			}
 
 		} catch (Exception e) {
-			System.out.println("ERRO.....");
+			System.out.println("ERRO SELECT.....");
 		} finally {
 			if (codigo != null) {
 				codigo.close();

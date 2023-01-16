@@ -127,6 +127,84 @@ public class LutadorDAO {
 		return lutador;
 	}
 
+	
+	public static void vitoriaLutador(Lutador lutador) throws SQLException {
+
+		String sql1 = "UPDATE lutador SET vitoria = ? WHERE nome = ?";
+
+		Connection con = null;
+		PreparedStatement codigo = null;
+
+		try {
+			con = Conexao.conectarBD();
+			codigo = con.prepareStatement(sql1);
+			codigo.setDouble(1, lutador.getVitorias());
+			codigo.setString(2, lutador.getNome());
+			codigo.execute();
+		} catch (SQLException e) {
+			System.out.println("ERRO UPDATE.....");
+			e.printStackTrace();
+		} finally {
+			if (codigo != null) {
+				codigo.close();
+			}
+			if (con != null)
+				con.close();
+		}
+	}
+	
+	public static void derrotaLutador(Lutador lutador) throws SQLException {
+
+		String sql1 = "UPDATE lutador SET derrota = ? WHERE nome = ?";
+
+		Connection con = null;
+		PreparedStatement codigo = null;
+
+		try {
+			con = Conexao.conectarBD();
+			codigo = con.prepareStatement(sql1);
+			codigo.setDouble(1, lutador.getDerrotas());
+			codigo.setString(2, lutador.getNome());
+			codigo.execute();
+		} catch (SQLException e) {
+			System.out.println("ERRO UPDATE.....");
+			e.printStackTrace();
+		} finally {
+			if (codigo != null) {
+				codigo.close();
+			}
+			if (con != null)
+				con.close();
+		}
+	}
+	
+	public static void empateLutador(Lutador lutador) throws SQLException {
+
+		String sql1 = "UPDATE lutador SET empate = ? WHERE nome = ?";
+
+		Connection con = null;
+		PreparedStatement codigo = null;
+
+		try {
+			con = Conexao.conectarBD();
+			codigo = con.prepareStatement(sql1);
+			codigo.setDouble(1, lutador.getEmpates());
+			codigo.setString(2, lutador.getNome());
+			codigo.execute();
+		} catch (SQLException e) {
+			System.out.println("ERRO UPDATE.....");
+			e.printStackTrace();
+		} finally {
+			if (codigo != null) {
+				codigo.close();
+			}
+			if (con != null)
+				con.close();
+		}
+	}
+
+	
+	
 	public static void alterarPesoLutadorBD(Lutador lutador) throws SQLException {
 
 		String sql1 = "UPDATE lutador SET peso = ? , categoria = ? WHERE nome = ?";
