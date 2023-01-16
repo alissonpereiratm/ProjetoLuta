@@ -29,7 +29,6 @@ public class Principal {
 				}
 				break;
 			case 2:
-
 				pesquisarLutador();
 				break;
 			case 3:
