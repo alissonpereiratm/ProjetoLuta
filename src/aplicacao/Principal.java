@@ -2,7 +2,6 @@ package aplicacao;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -14,6 +13,8 @@ import modelo.Lutador;
 public class Principal {
 
 	public static void main(String[] args) throws SQLException {
+		Lutador lutador = new Lutador();
+		Luta luta = new Luta();
 
 		int op = 0;
 		do {
@@ -29,25 +30,25 @@ public class Principal {
 
 					break;
 				case 2:
-					pesquisarLutador();
+					lutador.pesquisarLutador();
 					break;
 				case 3:
 					mostraListaLutadores();
 					break;
 				case 4:
-					alterarPesoLutador();
+					lutador.alterarPesoLutador();
 					break;
 				case 5:
-					excluirLutador();
+					lutador.excluirLutador();
 					break;
 				case 6:
-					LutaDAO.marcarLutaBD(marcarLuta());
+					LutaDAO.marcarLutaBD(luta.marcarLuta());
 					break;
 				case 7:
-					mostralutasMarcadas();
+					luta.mostralutasMarcadas();
 					break;
 				case 8:
-					iniciarLuta();
+					luta.iniciarLuta();
 					break;
 				case 9:
 					JOptionPane.showMessageDialog(null, "Sistema Finalizado!");
@@ -55,163 +56,8 @@ public class Principal {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		} while (op != 9);
-	}
-
-	private static Luta marcarLuta() {
-		int op = 0;
-		Luta luta = null;
-
-		try {
-			do {
-				Principal.mostraListaLutadores();
-				String nome = JOptionPane.showInputDialog("Digite o nome do primeiro lutador ");
-
-				Lutador lutador1 = LutadorDAO.pesquisarLutadorBD(nome);
-				if (lutador1 != null) {
-					Principal.mostraListaLutadores();
-					String nome2 = JOptionPane.showInputDialog("Digite o nome do segundo lutador");
-
-					Lutador lutador2 = LutadorDAO.pesquisarLutadorBD(nome2);
-					if (lutador2 != null) {
-						if (lutador1.getCategoria().equalsIgnoreCase(lutador2.getCategoria())) {
-							int round = Integer.parseInt(JOptionPane.showInputDialog("Digite a quantidade de rounds"));
-
-							JOptionPane.showMessageDialog(null, "Luta marcada!");
-							luta = new Luta(round, nome, nome2);
-							op = 1;
-						} else
-							JOptionPane.showMessageDialog(null,
-									"Categoria dos lutadores diferentes\nDigite novamente o nome dos 2 lutadores");
-					} else
-						JOptionPane.showMessageDialog(null,
-								"Lutador não cadastrado\nDigite novamente o nome dos 2 lutadores");
-				} else
-					JOptionPane.showMessageDialog(null,
-							"Lutador não cadastrado\nDigite novamente o nome dos 2 lutadores");
-			} while (op == 0);
-		} catch (SQLException e) {
-			e.printStackTrace();
+		} while (op != 9);	
 		}
-
-		return luta;
-
-	}
-
-	private static void iniciarLuta() throws SQLException {
-		Principal.mostralutasMarcadas();
-		int id = Integer.parseInt(JOptionPane.showInputDialog("Digite o ID da luta:"));
-		Luta pesquisaLuta = LutaDAO.pesquisarLutaBD(id);
-		JOptionPane.showMessageDialog(null, pesquisaLuta.toString());
-
-		pesquisaLuta.getLutador1();
-
-		Random gerador = new Random(2);
-		int lutador01 = 0;
-		int lutador02 = 0;
-		String vitoria = "";
-		if (pesquisaLuta.getRound() != 0) {
-
-			for (int i = 0; i < pesquisaLuta.getRound(); i++) {
-				int resultado1 = gerador.nextInt(10);
-				int resultado2 = gerador.nextInt(10);
-				JOptionPane.showMessageDialog(null,
-						"Round " + (i + 1) + "\nO Lutador " + pesquisaLuta.getLutador1() + " obtve " + resultado1
-								+ " pontos" + "\nO Lutador " + pesquisaLuta.getLutador2() + " obtve " + resultado2
-								+ " pontos");
-				if (resultado1 > resultado2) {
-					vitoria = pesquisaLuta.getLutador1();
-					JOptionPane.showMessageDialog(null, "O lutador " + vitoria + " ganhou o Round");
-				} else if (resultado1 < resultado2) {
-					vitoria = pesquisaLuta.getLutador2();
-					JOptionPane.showMessageDialog(null, "O lutador " + vitoria + " ganhou o Round");
-				} else
-					JOptionPane.showMessageDialog(null, "Round empatado");
-				if (pesquisaLuta.getLutador1().equalsIgnoreCase(vitoria)) {
-					lutador01++;
-				} else
-					lutador02++;
-
-			}
-			if (lutador01 > lutador02) {
-
-				Lutador lutador = LutadorDAO.pesquisarLutadorBD(pesquisaLuta.getLutador1());
-				if (lutador != null) {
-					lutador.vitoria(1);
-
-					LutadorDAO.vitoriaLutador(lutador);
-
-					JOptionPane.showMessageDialog(null, "O lutador " + lutador.getNome() + " venceu a luta");
-
-				}
-				Lutador lutador1 = LutadorDAO.pesquisarLutadorBD(pesquisaLuta.getLutador2());
-				if (lutador1 != null) {
-					lutador1.derrota(1);
-
-					LutadorDAO.derrotaLutador(lutador1);
-
-					JOptionPane.showMessageDialog(null, "Dados atualizados");
-
-				}
-			} else if (lutador01 < lutador02) {
-				Lutador lutador = LutadorDAO.pesquisarLutadorBD(pesquisaLuta.getLutador2());
-				if (lutador != null) {
-					lutador.setVitorias(1);
-
-					LutadorDAO.vitoriaLutador(lutador);
-
-					JOptionPane.showMessageDialog(null, "O lutador " + lutador.getNome() + " venceu a luta");
-
-				}
-
-				Lutador lutador1 = LutadorDAO.pesquisarLutadorBD(pesquisaLuta.getLutador2());
-				if (lutador1 != null) {
-					lutador1.setDerrotas(1);
-
-					LutadorDAO.derrotaLutador(lutador1);
-
-					JOptionPane.showMessageDialog(null, "Dados atualizados");
-				}
-			} else if (lutador01 == lutador02) {
-				Lutador lutador1 = LutadorDAO.pesquisarLutadorBD(pesquisaLuta.getLutador2());
-				if (lutador1 != null) {
-					lutador1.setEmpates(1);
-
-					LutadorDAO.empateLutador(lutador1);
-				}
-				Lutador lutador = LutadorDAO.pesquisarLutadorBD(pesquisaLuta.getLutador1());
-				if (lutador != null) {
-					lutador.setEmpates(1);
-
-					LutadorDAO.empateLutador(lutador);
-
-					JOptionPane.showMessageDialog(null, "Luta empatada");
-
-				}
-
-				JOptionPane.showMessageDialog(null, "Dados atualizados");
-			}
-
-			LutaDAO.deletarLutaBD(pesquisaLuta);
-		} else
-			JOptionPane.showMessageDialog(null, "Vc precisa marcar uma luta antes");
-
-	}
-
-	public static void mostralutasMarcadas() {
-		ArrayList<Luta> lutas = new ArrayList<>();
-		try {
-			lutas = LutaDAO.lerDadosBD();
-		} catch (SQLException e) {
-			System.out.println("ERRO AO CARREGAR DADOS DO BANCO");
-		}
-		String mostrarLutas = "";
-		for (Luta luta : lutas) {
-			mostrarLutas += "ID da Luta " + luta.getId() + "\n" + luta.getLutador1() + " VS " + luta.getLutador2()
-					+ "\n" + luta.getRound() + " Rounds" + "\n\n";
-		}
-		JOptionPane.showMessageDialog(null, "Lutas marcadas\n\n" + mostrarLutas);
-	}
 
 	public static void mostraListaLutadores() {
 		ArrayList<Lutador> lutadores = new ArrayList<>();
@@ -220,58 +66,15 @@ public class Principal {
 		} catch (SQLException e) {
 			System.out.println("ERRO AO CARREGAR DADOS DO BANCO");
 		}
-		mostrarDados(lutadores);
+		Principal.mostrarDados(lutadores);
 	}
 
-	private static void excluirLutador() {
-		String nome = JOptionPane.showInputDialog("Digite o nome do lutador para excluir");
-		try {
-			Lutador lutador = LutadorDAO.pesquisarLutadorBD(nome);
-			if (lutador != null) {
-				mostrarDados(lutador);
-				int res = JOptionPane.showConfirmDialog(null, "Deseja excluir " + lutador.getNome() + " ?");
-				if (res == 0) {
-					LutadorDAO.deletarLutadorBD(lutador);
-				}
-
-			} else
-				JOptionPane.showMessageDialog(null, "Lutador não cadastrado");
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void alterarPesoLutador() {
-
-		String nome = JOptionPane.showInputDialog("Digite o nome do lutador para alterar o peso");
-		try {
-			Lutador lutador = LutadorDAO.pesquisarLutadorBD(nome);
-			if (lutador != null) {
-				mostrarDados(lutador);
-
-				double peso = Double.parseDouble(JOptionPane.showInputDialog("Digite o novo peso:"));
-
-				lutador.setPeso(peso);
-				lutador.categoriaPeso(peso);
-
-				LutadorDAO.alterarPesoLutadorBD(lutador);
-
-				JOptionPane.showMessageDialog(null, "Dados atualizados");
-
-			} else
-				JOptionPane.showMessageDialog(null, "Lutador não cadastrado");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void mostrarDados(Lutador lutador) {
+	public static void mostrarDados(Lutador lutador) {
 		JOptionPane.showMessageDialog(null, lutador.toString());
 
 	}
 
-	private static void mostrarDados(ArrayList<Lutador> lutadores) {
+	public static void mostrarDados(ArrayList<Lutador> lutadores) {
 		String mostrarLutadores = "";
 		for (Lutador lutador : lutadores) {
 			mostrarLutadores += "Nome: " + lutador.getNome() + "\nCategoria: " + lutador.getCategoria() + "\nVitoria: "
@@ -279,12 +82,6 @@ public class Principal {
 					+ lutador.getEmpates() + "\n\n";
 		}
 		JOptionPane.showMessageDialog(null, mostrarLutadores);
-	}
-
-	private static void pesquisarLutador() throws SQLException {
-		String nome = JOptionPane.showInputDialog("Digite o nome");
-		Lutador pesquisaLutador = LutadorDAO.pesquisarLutadorBD(nome);
-		JOptionPane.showMessageDialog(null, pesquisaLutador.toString());
 	}
 
 	private static Lutador cadastrar() throws SQLException {

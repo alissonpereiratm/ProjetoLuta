@@ -1,5 +1,12 @@
 package modelo;
 
+import java.sql.SQLException;
+
+import javax.swing.JOptionPane;
+
+import aplicacao.Principal;
+import dao.LutadorDAO;
+
 public class Lutador {
 
 	private String nome;
@@ -43,6 +50,56 @@ public class Lutador {
 				+ "\n altura=" + this.altura + "\n peso=" + this.peso + "\n categoria=" + this.categoria
 				+ "\n vitorias=" + this.vitorias + "\n derrotas=" + this.derrotas + "\n empates=" + this.empates
 				+ "\n\n";
+	}
+
+	public void excluirLutador() {
+		String nome = JOptionPane.showInputDialog("Digite o nome do lutador para excluir");
+		try {
+			Lutador lutador = LutadorDAO.pesquisarLutadorBD(nome);
+			if (lutador != null) {
+				Principal.mostrarDados(lutador);
+				int res = JOptionPane.showConfirmDialog(null, "Deseja excluir " + lutador.getNome() + " ?");
+				if (res == 0) {
+					LutadorDAO.deletarLutadorBD(lutador);
+				}
+
+			} else
+				JOptionPane.showMessageDialog(null, "Lutador não cadastrado");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void pesquisarLutador() throws SQLException {
+
+		String nome = JOptionPane.showInputDialog("Digite o nome");
+		Lutador pesquisaLutador = LutadorDAO.pesquisarLutadorBD(nome);
+		JOptionPane.showMessageDialog(null, pesquisaLutador.toString());
+	}
+
+	public void alterarPesoLutador() {
+
+		String nome = JOptionPane.showInputDialog("Digite o nome do lutador para alterar o peso");
+		try {
+			Lutador lutador = LutadorDAO.pesquisarLutadorBD(nome);
+			if (lutador != null) {
+				Principal.mostrarDados(lutador);
+
+				double peso = Double.parseDouble(JOptionPane.showInputDialog("Digite o novo peso:"));
+
+				lutador.setPeso(peso);
+				lutador.categoriaPeso(peso);
+
+				LutadorDAO.alterarPesoLutadorBD(lutador);
+
+				JOptionPane.showMessageDialog(null, "Dados atualizados");
+
+			} else
+				JOptionPane.showMessageDialog(null, "Lutador não cadastrado");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void vitoria(int vitoria) {

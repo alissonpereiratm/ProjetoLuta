@@ -127,7 +127,6 @@ public class LutadorDAO {
 		return lutador;
 	}
 
-	
 	public static void vitoriaLutador(Lutador lutador) throws SQLException {
 
 		String sql1 = "UPDATE lutador SET vitoria = ? WHERE nome = ?";
@@ -152,7 +151,7 @@ public class LutadorDAO {
 				con.close();
 		}
 	}
-	
+
 	public static void derrotaLutador(Lutador lutador) throws SQLException {
 
 		String sql1 = "UPDATE lutador SET derrota = ? WHERE nome = ?";
@@ -177,7 +176,7 @@ public class LutadorDAO {
 				con.close();
 		}
 	}
-	
+
 	public static void empateLutador(Lutador lutador) throws SQLException {
 
 		String sql1 = "UPDATE lutador SET empate = ? WHERE nome = ?";
@@ -203,8 +202,6 @@ public class LutadorDAO {
 		}
 	}
 
-	
-	
 	public static void alterarPesoLutadorBD(Lutador lutador) throws SQLException {
 
 		String sql1 = "UPDATE lutador SET peso = ? , categoria = ? WHERE nome = ?";

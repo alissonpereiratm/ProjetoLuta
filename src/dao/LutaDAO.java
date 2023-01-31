@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
 import modelo.Luta;
-import modelo.Lutador;
 
 public class LutaDAO {
-	
 
 	public static void marcarLutaBD(Luta luta) throws SQLException {
 		String sql = "INSERT INTO luta (rounds,lutador1,lutador2) VALUES (?,?,?)";
@@ -42,8 +40,7 @@ public class LutaDAO {
 		}
 
 	}
-	
-	
+
 	public static void deletarLutaBD(Luta luta) throws SQLException {
 
 		String sql1 = "DELETE FROM luta WHERE idLuta = ?";
@@ -67,8 +64,6 @@ public class LutaDAO {
 				con.close();
 		}
 	}
-	
-	
 
 	public static ArrayList<Luta> lerDadosBD() throws SQLException {
 		String sql = "SELECT * from luta";
@@ -121,7 +116,7 @@ public class LutaDAO {
 			dadosBD = codigo.executeQuery();
 
 			if (dadosBD.next() != false) {
-				 luta = new Luta();
+				luta = new Luta();
 
 				luta.setRound(dadosBD.getInt("rounds"));
 				luta.setId(dadosBD.getInt("idluta"));
